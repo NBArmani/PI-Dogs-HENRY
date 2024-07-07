@@ -1,35 +1,61 @@
-const { Dog, Temperament } = require('../db')
+const axios = require('axios');
+const dotenv = require('dotenv');
+dotenv.config();
+const { DB_API_KEY } = process.env;
+const { validate: isUUID } = require('uuid');
+const { Dog, Temperament } = require('../db');
 
 const getDogById = async (id) => {
     try {
-        const dog = await Dog.findByPk(id, {
-            include: Temperament
-        })
 
-        if (dog) {
-            return dog
-        }
+        let dogDetail;
 
-        const response = await axios.get(`https://api.thedogapi.com/v1/breeds/${id}?api_key=${DB_API_KEY}`)
-        const allDogs = response.data
+        if(isUUID(id)) {
+            const dog = await Dog.findByPk(id, {
+                include: {
+                    model: Temperament,
+                    attributes: ['id', 'name'],
+                    through: { attributes: [] }
+                }
+            });
+        
 
-        const apiDog = allDogs.find(d => d.id === parseInt(id))
+            if (dog) {
+                const dogInfo = dog.toJSON()
+                dogInfo.temperament = dog.Temperament.map((temp) => ({
+                    id: temp.id,
+                    name: temp.name
+                }))
+                dogDetail = dogInfo
+                return dogDetail
+            } else {
+                throw new Error('No se ha podido encontrar el perro con el ID especificado');
+            }
 
-        if (apiDog) {
-            return {
-                id: apiDog.id,
-                name: apiDog.name,
-                image: apiDog.image,
-                height: apiDog.height.metric,
-                weight: apiDog.weight.metric,
-                life_span: apiDog.life_span,
+        } else {            
+            const response = await axios.get(`https://api.thedogapi.com/v1/breeds/${id}?api_key=${DB_API_KEY}`);
+            const dogFromApi = response.data;
+
+            if (dogFromApi) {
+                dogDetail = {
+                    id: dogFromApi.id,
+                    reference_image_id: dogFromApi.reference_image_id,
+                    name: dogFromApi.name,
+                    height: dogFromApi.height.metric,
+                    weight: dogFromApi.weight.metric,
+                    life_span: dogFromApi.life_span,
+                    temperament: dogFromApi.temperament ? dogFromApi.temperament.split(', ') : []
+                };
+            } else {
+                throw new Error('No se ha podido encontrar el perro con el ID especificado en la API');
             }
         }
 
-        throw new error('El perro buscado no está aquí')
+        return dogDetail;
     } catch (error) {
+        console.log(`el error es el siguiente: ${error}`)
         throw new Error(error.message)
     }
-}
+};
 
-module.exports = getDogById
+module.exports = getDogById;
