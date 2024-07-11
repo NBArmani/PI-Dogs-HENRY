@@ -1,21 +1,20 @@
-const { Sequelize } = require('sequelize')
-const { Dog } = require('../db')
-const { Op } = Sequelize
+const {getAllDogs} = require ('./getAllDogs');
 
-const getDogsByName = async (name) => {
+const getDogsByName = async (nombreRaza) => {
     try {
-        const response = await Dog.findAll({
-            where: {
-                name: {
-                    [Op.iLike]: `%${name}%`
-                }
-            }
-        })
+        
+        const allDoggos = await getAllDogs();
 
-        return response
+        const dogName = allDoggos.filter(dog => dog.name.toLowerCase().includes(nombreRaza.toLowerCase()));
+
+        if (dogName.length === 0) {
+            throw new Error(`El perro ${nombreRaza} no existe`);
+        }
+
+        return dogName;
     } catch (error) {
-        throw new Error (error.message)
+        throw new Error(`Fíjate que este es el error: ${error.message}`);
     }
-}
+};
 
-module.exports = getDogsByName
+module.exports = { getDogsByName };

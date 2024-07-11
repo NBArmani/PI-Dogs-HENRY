@@ -272,5 +272,320 @@ id: response.id,
         life_span: response.life_span,
         temperament: response.temperament ? response.temperament.split(', ') : [], 
 
+________________________________________________________________________________________
+const axios = require('axios');
+const { Dog, Temperament } = require("../db");
+const dotenv = require('dotenv');
+const { Error } = require('sequelize');
+dotenv.config();
+const { DB_API_KEY } = process.env;
+
+const getDogs = async () => {
+    try {
+        // Intentamos obtener los datos de la base de datos local
+        const dataFromDb = await Dog.findAll({ include: Temperament });
+
+        // Si hay datos en la base de datos local, los retornamos
+        if (dataFromDb.length > 0) {
+            const dogDB = dataFromDb.map((dog) => ({
+                id: dog.id,
+                name: dog.name,
+                image: dog.image,
+                height: dog.height,
+                weight: dog.weight,
+                life_span: dog.life_span,
+                temperaments: dog.Temperaments.map((temp) => ({
+                    id: temp.id,
+                    name: temp.name,
+                })),
+            }));
+            return dogDB;
+        }
+
+        // Si no hay datos en la base de datos local, buscamos en la API externa
+        const response = await axios.get(`https://api.thedogapi.com/v1/breeds?api_key=${DB_API_KEY}`);
+        const dogs = response.data;
+
+        // Guardamos los perros de la API en la base de datos
+        for (const dog of dogs) {
+            await Dog.findOrCreate({
+                where: { id: dog.id },
+                defaults: {
+                    name: dog.name,
+                    image: dog.image.url,
+                    height: dog.height.metric,
+                    weight: dog.weight.metric,
+                    life_span: dog.life_span,
+                }
+            });
+        }
+
+        // Recuperamos los datos de la base de datos local nuevamente
+        const dataFromApi = await Dog.findAll({ include: Temperament });
+
+        // Mapeamos los datos y los retornamos
+        const dogData = dataFromApi.map((dog) => ({
+            id: dog.id,
+            name: dog.name,
+            image: dog.image,
+            height: dog.height,
+            weight: dog.weight,
+            life_span: dog.life_span,
+            temperaments: dog.Temperaments.map((temp) => ({
+                id: temp.id,
+                name: temp.name,
+            })),
+        }));
+       
+        return dogData;
+
+    } catch (error) {
+        console.error(`Error retrieving dogs: ${error.message}`);
+        throw new Error(error.message);
+    }
+};
+
+module.exports = getDogs;
+
+____________________________________________________________________________________
+const axios = require('axios');
+const { Dog, Temperament } = require("../db");
+const dotenv = require('dotenv');
+const { Error } = require('sequelize');
+
+dotenv.config();
+const { DB_API_KEY } = process.env;
+const getURL = `https://api.thedogapi.com/v1/breeds?api_key=${DB_API_KEY}`;
+
+const getDogs = async () => {
+    try {
+        ! Obtener datos de la API
+        const { data: dataFromApi } = await axios.get(getURL);
+
+        ! Mapeo de datos de la API
+        const dataFromApiMapped = dataFromApi.map((dog) => {
+            const imageURL = `https://api.thedogapi.com/v1/images/${dog.reference_image_id}.jpg`;
+
+            return {
+                id: dog.id,
+                name: dog.name,
+                image: imageURL,  // Usar imageURL en lugar de dog.image.url
+                height: dog.height?.metric,
+                weight: dog.weight?.metric,
+                life_span: dog.life_span,
+                temperament: dog.temperament,
+                created: false
+            };
+        });
+
+        ! Obtener datos de la base de datos
+        const dogDB = await Dog.findAll({
+            include: {
+                model: Temperament,
+                as: 'temperament'
+            }
+        });
+
+        ! Verificar si hay datos en la base de datos
+        if (!dogDB || dogDB.length === 0) {
+            throw new Error('No hay perros en la base de datos');
+        }
+
+        ! Mapeo de datos de la base de datos
+        const dataFromDbMapped = dogDB.map((dog) => {
+            const dogBehavior = dog.temperament.map(temp => temp.name);
+
+            return {
+                id: dog.id,
+                name: dog.name,
+                image: dog.image,
+                height: dog.height,
+                weight: dog.weight,
+                life_span: dog.life_span,
+                temperament: dogBehavior.join(', '),
+                created: true
+            };
+        });
+
+        ! Combinar datos de la API y de la base de datos
+        const combinedData = [...dataFromDbMapped, ...dataFromApiMapped];
+
+        return combinedData;
+    } catch (error) {
+        throw new Error(`Error al obtener datos de perros: ${error.message}`);
+    }
+};
+
+module.exports = getDogs;
+
+
+________________________________________________________________________________________
+
+const axios = require('axios');
+const { Dogs } = require('../db');
+const dotenv = require('dotenv');
+dotenv.config();
+const { API_KEY } = process.env;
+
+const getDogByName = async (req, res) => {
+  try {
+    const { q } = req.query;
+
+    if (!q) {
+      return res.status(400).json({ error: 'digita un criterio de busqueda' });
+    }
+
+    todo obtengo los resultados de la base de datos
+
+    const dbResult = await Dogs.findAll();
+
+  todo obtengo resultados de la api
+
+    const responseApi = await axios.get(
+      http://api.thedogapi.com/v1/breeds?API_KEY=${API_KEY}
+    );
+
+    const apiResult = responseApi.data;
+
+    todo combinamos los resultados
+
+    const allResults = [...dbResult, ...apiResult];
+
+    todo filtramos los resultados basados con la busqueda
+
+    const filteredResults = allResults.filter((dog) =>
+      dog.name.toLowerCase().includes(q.toLowerCase())
+    );
+
+    if (filteredResults.length > 0) {
+      return res.status(200).json(filteredResults);
+    } else {
+      return res.status(404).json({
+        message: 'no se encontraron perror con el nombre ingresado',
+      });
+    }
+  } catch (error) {
+    console.error('Error al realizar la busqueda', error);
+    res.status(500).json({ error: 'internal server error' });
+  }
+};
+
+module.exports = getDogByName;
+________________________________________________________________________________________
+const axios = require('axios');
+const dotenv = require('dotenv');
+dotenv.config();
+const { DB_API_KEY } = process.env;
+const { validate: isUUID } = require('uuid');
+const { Dog, Temperament } = require('../db');
+
+const getDogById = async (id) => {
+    try {
+        let dogDetail;
+
+        if (isUUID(id)) {
+            const dog = await Dog.findByPk(id, {
+                include: {
+                    model: Temperament,
+                    attributes: ['id', 'name'],
+                    through: { attributes: [] }
+                }
+            });
+
+            if (dog) {
+                const dogInfo = dog.toJSON();
+                dogInfo.temperament = dog.temperaments.map(temp => temp.name);
+                dogDetail = dogInfo;
+            } else {
+                throw new Error('No se ha podido encontrar el perro con el ID especificado en la base de datos');
+            }
+
+        } else {
+            const response = await axios.get(`https://api.thedogapi.com/v1/breeds/${id}?api_key=${DB_API_KEY}`);
+            const dogFromApi = response.data;
+
+            if (dogFromApi) {
+                dogDetail = {
+                    id: dogFromApi.id,
+                    reference_image_id: dogFromApi.reference_image_id,
+                    name: dogFromApi.name,
+                    height: dogFromApi.height.metric,
+                    weight: dogFromApi.weight.metric,
+                    life_span: dogFromApi.life_span,
+                    temperament: dogFromApi.temperament ? dogFromApi.temperament.split(', ') : []
+                };
+            } else {
+                throw new Error('No se ha podido encontrar el perro con el ID especificado en la API');
+            }
+        }
+
+        return dogDetail;
+    } catch (error) {
+        console.log(`El error es el siguiente: ${error.message}`);
+        throw new Error(error.message);
+    }
+};
+
+module.exports = { getDogById };
+
+
+__________________________________________________________________________________________________________
+const axios = require('axios');
+const dotenv = require('dotenv');
+const { Dog, Temperament } = require('../db');
+dotenv.config();
+const { DB_API_KEY } = process.env;
+
+const getDogsByName = async (nombreRaza) => {
+    try {
+        const dogsFromDb = await Dog.findAll({
+            include: {
+                model: Temperament,
+                attributes: ['name'],
+                through: { attributes: [] }
+            }
+        });
+        
+        const response = await axios.get(`https://api.thedogapi.com/v1/breeds?api_key=${DB_API_KEY}`);
+        const dogsFromApi = response.data;
+        
+        const allDoggos = [
+            ...dogsFromDb.map(dog => ({
+                id: dog.id,
+                name: dog.name,
+                image: dog.image,
+                height: dog.height,
+                weight: dog.weight,
+                life_span: dog.life_span,
+                temperament: dog.temperaments.map(temp => temp.name).join(', '),
+                created: true
+            })),
+            ...dogsFromApi.map(dog => ({
+                id: dog.id,
+                name: dog.name,
+                image: `https://api.thedogapi.com/v1/images/${dog.reference_image_id}.jpg`,
+                height: dog.height.metric,
+                weight: dog.weight.metric,
+                life_span: dog.life_span,
+                temperament: dog.temperament,
+                created: false
+            }))
+        ];
+
+        const dogName = allDoggos.filter(dog => dog.name.toLowerCase().includes(nombreRaza.toLowerCase()));
+
+        if (dogName.length === 0) {
+            throw new Error(`El perro ${nombreRaza} no existe`);
+        }
+
+        return dogName;
+    } catch (error) {
+        throw new Error(`Fíjate que este es el error: ${error.message}`);
+    }
+};
+
+module.exports = { getDogsByName };
+
+
 
 */
