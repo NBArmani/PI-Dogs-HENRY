@@ -5,12 +5,14 @@ const { getDogsHandler } = require('../handlers/getDogsHandler');
 const { getDogByIdHandler } = require('../handlers/getDogByIDHandler')
 const { getDogsByNameHandler } = require('../handlers/getDogsByNameHandler');
 const { getTemperamentsHandler } = require('../handlers/getTemperamentsHandler');
+const { creatingADogHandler } = require('../handlers/creatingADogHandler');
+
 
 const router = Router();
 router.get('/dogs', getDogsHandler);
 router.get('/dogs/name', getDogsByNameHandler);
 router.get('/dogs/:id', getDogByIdHandler);
-router.post('/dogs', getDogsByNameHandler);
+router.post('/dogs', creatingADogHandler);
 router.get ('/temperaments', getTemperamentsHandler)
 
 // Configurar los routers
