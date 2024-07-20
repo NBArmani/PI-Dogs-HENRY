@@ -51,7 +51,6 @@ const getAllDogs = async () => {
 
         
         const mappedDataFromApi = data.map(dog => {
-            const imageURL = `https://api.thedogapi.com/v1/images/${dog.reference_image_id}.jpg`;
             return {
                 id: dog.id,
                 name: dog.name,
@@ -59,7 +58,7 @@ const getAllDogs = async () => {
                 weight: dog.weight.metric,
                 life_span: dog.life_span,
                 temperament: dog.temperament,
-                image: imageURL,
+                image: dog.image.url,
                 created: false
             };
         });

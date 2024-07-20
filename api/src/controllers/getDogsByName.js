@@ -1,8 +1,8 @@
-const {getAllDogs} = require ('./getAllDogs');
+const { getAllDogs } = require('./getAllDogs');
 
 const getDogsByName = async (nombreRaza) => {
     try {
-        
+
         const allDoggos = await getAllDogs();
 
         const dogName = allDoggos.filter(dog => dog.name.toLowerCase().includes(nombreRaza.toLowerCase()));
