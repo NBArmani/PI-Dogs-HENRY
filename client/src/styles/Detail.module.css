@@ -1,0 +1,68 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.background {
+    text-align: center;
+    background-image: url('https://wallpapers.com/images/hd/cute-dog-paw-prints-aoz317aorgky57ms.jpg');
+    background-attachment: fixed;
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+
+.container {
+    background-color: rgba(255, 0, 255, 0.712);
+    padding: 30px;
+    width: 80%;
+    max-width: 1200px;
+    display: flex;
+    align-items: flex-start;
+    border-radius: 20px;
+    border: 7px solid rgb(167, 12, 187);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    gap: 20px; 
+}
+
+/* Sección izquierda: título e imagen */
+.leftSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; 
+}
+
+
+.leftSection img {
+    max-width: 450px;
+    border-radius: 15px;
+}
+
+
+.rightSection {
+    font-family: monospace;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 20px;
+    flex: 1;
+    margin-top: 80px;
+}
+
+
+.h1 {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 50px;
+    color: white;
+    text-shadow: 3px 3px 6px black, 
+                 3px 3px 12px rgba(255, 105, 180, 0.75), 
+                 3px 3px 18px rgba(30, 144, 255, 0.5);
+}

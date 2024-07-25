@@ -1,0 +1,91 @@
+.container {
+    background-color: rgba(66, 32, 10, 0.671);
+    display: flex;
+    flex-direction: column;
+    padding: 60px;
+    width: 100%;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 40px;
+    font-weight: bold;
+    color: white;
+    align-items: center;
+}
+
+.topSection {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+    margin-bottom: 20px;
+}
+
+
+.searchForm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.searchBar {
+    padding: 10px;
+    font-size: 13px;
+    width: 100%;
+    max-width: 300px;
+    border-radius: 5px;
+    border: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+
+.filtersSection {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Espacio entre los filtros */
+    margin-bottom: 20px;
+}
+
+.filtersSection select {
+    padding: 7px;
+    font-size: 13px;
+    border-radius: 5px;
+    border: 2px solid #ddd;
+    background-color: #fff;
+    color: #333;
+    font-family: Arial, sans-serif;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filtersSection select:hover {
+    border-color: blueviolet;
+}
+
+.filtersSection select:focus {
+    border-color: blueviolet;
+    box-shadow: 0 0 5px blueviolet;
+    outline: none;
+}
+
+
+.button {
+    padding: 10px 20px;
+    background-color: blueviolet;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: aquamarine;
+    border: 2px solid #530174;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.5s ease;
+}
+
+.button:hover {
+    color: #ffffff;
+    background: blueviolet;
+    border: 1px solid blueviolet;
+    text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #ffffff;
+    box-shadow: 0 0 5px blueviolet, 0 0 20px blueviolet, 0 0 50px blueviolet, 0 0 100px blueviolet;
+}

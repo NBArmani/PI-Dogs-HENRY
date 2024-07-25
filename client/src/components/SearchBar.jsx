@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getDogsByName } from '../redux/actions';
-
+import styles from '../styles/Nav.module.css';
 const SearchBar = () => {
     const dispatch = useDispatch();
     const [query, setQuery] = useState('');
@@ -28,14 +28,15 @@ const SearchBar = () => {
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className={styles.searchForm}>
                 <input
+                    className={styles.searchBar}
                     type="search"
                     value={query}
                     onChange={handleChange}
                     placeholder="Busca tu perro favorito aquí"
                 />
-                <button type="submit">Buscar</button>
+                <button type="submit" className={styles.button} >Buscar</button>
             </form>
             {error && <p>{error}</p>}
         </div>

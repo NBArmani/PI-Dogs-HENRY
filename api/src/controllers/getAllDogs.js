@@ -1,7 +1,6 @@
 const axios = require('axios');
 const { Dog, Temperament } = require('../db');
 const dotenv = require('dotenv');
-const { Error } = require('sequelize');
 dotenv.config();
 const { DB_API_KEY } = process.env;
 
@@ -13,7 +12,6 @@ const getAllDogs = async () => {
         let dogDB = await Dog.findAll({
             include: {
                 model: Temperament,
-                as: 'temperament',
                 attributes: ['name'], 
                 through: {
                     attributes: [] 
@@ -21,12 +19,12 @@ const getAllDogs = async () => {
             }
         });
 
-        
-        if (!dogDB || dogDB.length === 0) {
+             if (!dogDB || dogDB.length === 0) {
             dogDB = [];
         }
 
         
+
         const mappedDataFromDb = dogDB.map(dog => {
             const dogBehavior = dog.temperaments.map(temp => temp.name);
             return {
@@ -41,15 +39,10 @@ const getAllDogs = async () => {
             };
         });
 
-        
+    
+
         const { data } = await axios.get(getURL);
 
-        
-        if (!data || data.length === 0) {
-            throw new Error('No hay perros en esta perrera');
-        }
-
-        
         const mappedDataFromApi = data.map(dog => {
             return {
                 id: dog.id,
@@ -63,6 +56,8 @@ const getAllDogs = async () => {
             };
         });
 
+       
+
         return [...mappedDataFromDb, ...mappedDataFromApi];
 
     } catch (error) {
@@ -71,5 +66,3 @@ const getAllDogs = async () => {
 };
 
 module.exports = { getAllDogs };
-
-

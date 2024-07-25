@@ -14,20 +14,20 @@ import {
 
 
 export const getDogs = () => {
-    const endpoint = 'http://localhost:3001/dogs'
+    const endpoint = 'http://localhost:3001/dogs';
     return async (dispatch) => {
         try {
-            const { data } = await axios.get(endpoint)
+            const { data } = await axios.get(endpoint);
+           
             dispatch({
                 type: GET_DOGS,
                 payload: data
-            })
+            });
         } catch (error) {
-            console.log(`No hay datos disponibles debido a esto: ${error.message}`)
+            console.log(`No hay datos disponibles debido a esto: ${error.message}`);
         }
-    }
-}
-
+    };
+};
 export const getTemperaments = () => {
     const endpoint = 'http://localhost:3001/temperaments'
     return async (dispatch) => {
@@ -63,32 +63,34 @@ export const getDogsByName = (name) => {
     return async (dispatch) => {
         try {
             const { data } = await axios.get(endpoint)
-            console.log(data)
+            
+            if (data.length === 0) throw new Error('No hay perros con ese nombre')
+
             dispatch({
                 type: GET_DOG_BY_NAME,
                 payload: data
             })
         } catch (error) {
-            console.log('el perro indicado no existe por: ' + error.message)
+            console.log(error.message)
         }
     }
 }
 
 export const postDog = (payload) => {
-    const endpoint = 'http://localhost:3001/dogs'
+    const endpoint = 'http://localhost:3001/dogs';
     return async (dispatch) => {
         try {
-            const { data } = await axios.post(endpoint, payload)
+           
+            const { data } = await axios.post(endpoint, payload);
             dispatch({
                 type: POST_DOG,
                 payload: data
-            })
+            });
         } catch (error) {
-            console.log(`Error al crear al perro por ${error.message}`)
+            console.log(`Error al crear al perro por ${error.message}`);
         }
     }
 }
-
 export const filterByTemperament = (temperament) => {
     return {
         type: FILTER_BY_TEMPERAMENT,

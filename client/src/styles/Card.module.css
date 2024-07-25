@@ -1,0 +1,40 @@
+.container {
+    background: rgb(152, 24, 238);
+    border: 5px solid #530174;
+    border-radius: 8px;
+    margin: 1rem;
+    width: 500px; 
+    height: 500px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    cursor: pointer;
+}
+
+.description {
+    font-family: fantasy;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+    margin: 1rem;
+}
+
+.container:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: rgb(172, 67, 241);
+    color: white;
+}
+
+.container_img {
+    width: 400px; 
+    height: 250px; 
+    object-fit: cover; 
+    border-radius: 8px; 
+    margin-top: 0.5rem; 
+    
+}

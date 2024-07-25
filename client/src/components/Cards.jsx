@@ -1,8 +1,9 @@
 import React from 'react'
 import Card from './Card'
+import styles from '../styles/Cards.module.css'
 const Cards = ({ dogs }) => {
     return (
-        <div>
+        <div className={styles.container}>
             {dogs.map((dog) => {
                 return (
                     <Card

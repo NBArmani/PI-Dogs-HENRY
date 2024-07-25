@@ -10,7 +10,7 @@ const { creatingADogHandler } = require('../handlers/creatingADogHandler');
 
 const router = Router();
 router.get('/dogs', getDogsHandler);
-router.get('/dogs?name', getDogsByNameHandler);
+router.get('/dogs/name', getDogsByNameHandler);
 router.get('/dogs/:id', getDogByIdHandler);
 router.post('/dogs', creatingADogHandler);
 router.get ('/temperaments', getTemperamentsHandler)

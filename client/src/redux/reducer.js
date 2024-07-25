@@ -20,6 +20,7 @@ const initialState = {
 const rootReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_DOGS:
+            
             return {
                 ...state,
                 dogs: action.payload,
@@ -43,8 +44,10 @@ const rootReducer = (state = initialState, action) => {
         case POST_DOG:
             return {
                 ...state,
-                postDog: action.payload
+                dogs: [...state.dogs, action.payload],
+                filteredDogs: [...state.filteredDogs, action.payload]
             };
+
         case FILTER_BY_TEMPERAMENT:
             const filteredByTemperament = state.dogs.filter(dog =>
                 dog.temperament && dog.temperament.includes(action.payload)
@@ -54,9 +57,15 @@ const rootReducer = (state = initialState, action) => {
                 filteredDogs: filteredByTemperament
             };
         case FILTER_BY_ORIGIN:
+           
             const filteredByOrigin = action.payload === 'all'
                 ? state.dogs
-                : state.dogs.filter(dog => dog.created === (action.payload === 'database'));
+                : action.payload === 'created'
+                    ? state.dogs.filter(dog => dog.created === true)
+                    : action.payload === 'api'
+                        ? state.dogs.filter(dog => dog.created === false)
+                        : [];
+           
             return {
                 ...state,
                 filteredDogs: filteredByOrigin

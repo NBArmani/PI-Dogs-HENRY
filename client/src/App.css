@@ -1,4 +1,4 @@
-.App {
+/*.App {
   text-align: center;
 }
 
@@ -35,4 +35,13 @@
   to {
     transform: rotate(360deg);
   }
+}
+*/
+
+.App {
+  text-align: center;
+  background-image:'https://wallpapers.com/images/hd/cute-dog-paw-prints-aoz317aorgky57ms.jpg';
+  background-attachment: fixed;
+  background-size: cover;
+  min-height: 100vh;
 }
