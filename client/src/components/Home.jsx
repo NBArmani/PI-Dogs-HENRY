@@ -15,17 +15,25 @@ const Home = () => {
         dispatch(getDogs())
     },[dispatch])
 
+   useEffect(()=> {
+        setCurrentPage(1)
+    },[allDogs])
+
     const lastItemIndex = currentPage * itemsPerPage
     const firstItemIndex = lastItemIndex - itemsPerPage
     const currentItems = allDogs.slice(firstItemIndex, lastItemIndex)
 
-    const paginate = (pageNumber) => setCurrentPage(pageNumber)
+    const paginate = (pageNumber) => {
+        if (pageNumber >= 1 && pageNumber <= Math.ceil(allDogs.length / itemsPerPage)) {
+            setCurrentPage(pageNumber);
+        }
+    }
 
     return (
         <div className={styles.background} >
             <Nav/>
             <Cards dogs={currentItems}/>
-            <Pagination itemsPerPage={itemsPerPage} totalItems={allDogs.length} paginate={paginate}/>
+            <Pagination itemsPerPage={itemsPerPage} totalItems={allDogs.length} paginate={paginate} currentPage={currentPage}/>
         </div>
     )
 }

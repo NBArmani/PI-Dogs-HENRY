@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { filterByOrigin, filterByTemperament, orderByAlphabet, orderByWeight, getDogs, getTemperaments } from '../redux/actions';
+import { filterByOrigin, filterByTemperament, orderByAlphabet, orderByWeight, getDogs, getTemperaments, applyFilters } from '../redux/actions';
 import SearchBar from './SearchBar';
 import styles from '../styles/Nav.module.css';
 
 const Nav = () => {
     const dispatch = useDispatch();
     const temperaments = useSelector(state => state.temperaments);
-
-    useEffect(() => {
-        dispatch(getDogs());
-        dispatch(getTemperaments());
-    }, [dispatch]);
-
     const [originFilter, setOriginFilter] = useState('all');
     const [temperamentFilter, setTemperamentFilter] = useState('');
     const [alphabetOrder, setAlphabetOrder] = useState('asc');
     const [weightOrder, setWeightOrder] = useState('asc');
 
+
+    useEffect(() => {
+        dispatch(getDogs());
+        dispatch(getTemperaments());
+    }, [dispatch]);
+    
+    useEffect(() => {
+        dispatch(applyFilters()); // Aplicar filtros cuando se actualicen
+    }, [dispatch, originFilter, temperamentFilter]);
+    
     const handleOriginChange = (event) => {
         const value = event.target.value;
         setOriginFilter(value);

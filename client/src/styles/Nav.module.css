@@ -1,5 +1,5 @@
 .container {
-    background-color: rgba(66, 32, 10, 0.671);
+    background-color: rgba(66, 32, 10, 0.801);
     display: flex;
     flex-direction: column;
     padding: 60px;
@@ -8,6 +8,7 @@
     font-size: 40px;
     font-weight: bold;
     color: white;
+    text-shadow: 3px 3px 6px black, 3px 3px 12px black, 3px 3px 18px black;
     align-items: center;
 }
 
@@ -39,7 +40,13 @@
     font-weight: bold;
 }
 
-
+.searchbar_error{
+    font-family: 'Courier New', Courier, monospace;
+    color: rgb(247, 92, 118);
+    font-weight: bolder;
+    font-size: 17px;
+    text-shadow: none;
+}
 .filtersSection {
     width: 100%;
     display: flex;

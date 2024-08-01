@@ -8,7 +8,8 @@ import {
     FILTER_BY_TEMPERAMENT,
     FILTER_BY_ORIGIN,
     ORDER_BY_ALPHABET,
-    ORDER_BY_WEIGHT
+    ORDER_BY_WEIGHT,
+    APPLY_FILTERS
 } from "./actions-type";
 
 
@@ -59,22 +60,28 @@ export const getDetail = (id) => {
 }
 
 export const getDogsByName = (name) => {
-    const endpoint = `http://localhost:3001/dogs/name?q=${name}`
+    const endpoint = `http://localhost:3001/dogs/name?q=${name}`;
     return async (dispatch) => {
         try {
-            const { data } = await axios.get(endpoint)
-            
-            if (data.length === 0) throw new Error('No hay perros con ese nombre')
+            const response = await axios.get(endpoint);
+            const data = response.data;
+
+            if (data.length === 0) {
+                return { success: false };
+            }
 
             dispatch({
                 type: GET_DOG_BY_NAME,
                 payload: data
-            })
+            });
+
+            return { success: true };
         } catch (error) {
-            console.log(error.message)
+            console.log(error.message);
+            return { success: false };
         }
-    }
-}
+    };
+};
 
 export const postDog = (payload) => {
     const endpoint = 'http://localhost:3001/dogs';
@@ -118,3 +125,7 @@ export const orderByWeight = (order) => {
         payload: order
     }
 }
+
+export const applyFilters = () => ({
+    type: APPLY_FILTERS
+})

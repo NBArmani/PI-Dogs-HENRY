@@ -7,20 +7,23 @@ import {
     FILTER_BY_TEMPERAMENT,
     FILTER_BY_ORIGIN,
     ORDER_BY_ALPHABET,
-    ORDER_BY_WEIGHT
+    ORDER_BY_WEIGHT,
+    APPLY_FILTERS
 } from "./actions-type";
 const initialState = {
     dogs: [],
     filteredDogs: [],
     temperaments: [],
     detail: {},
-    postDog: []
+    postDog: [],
+    temperamentFilter: null,
+    originFilter: null
 };
 
 const rootReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_DOGS:
-            
+
             return {
                 ...state,
                 dogs: action.payload,
@@ -49,26 +52,14 @@ const rootReducer = (state = initialState, action) => {
             };
 
         case FILTER_BY_TEMPERAMENT:
-            const filteredByTemperament = state.dogs.filter(dog =>
-                dog.temperament && dog.temperament.includes(action.payload)
-            );
             return {
                 ...state,
-                filteredDogs: filteredByTemperament
+                temperamentFilter: action.payload
             };
         case FILTER_BY_ORIGIN:
-           
-            const filteredByOrigin = action.payload === 'all'
-                ? state.dogs
-                : action.payload === 'created'
-                    ? state.dogs.filter(dog => dog.created === true)
-                    : action.payload === 'api'
-                        ? state.dogs.filter(dog => dog.created === false)
-                        : [];
-           
             return {
                 ...state,
-                filteredDogs: filteredByOrigin
+                originFilter: action.payload
             };
         case ORDER_BY_ALPHABET:
             const sortedByAlphabet = [...state.filteredDogs].sort((a, b) => {
@@ -92,6 +83,32 @@ const rootReducer = (state = initialState, action) => {
                 ...state,
                 filteredDogs: sortedByWeight
             };
+        
+        case APPLY_FILTERS:
+            let filteredDogs = state.dogs;
+
+            // Aplica el filtro por temperamento
+            if (state.temperamentFilter) {
+                filteredDogs = filteredDogs.filter(dog =>
+                    dog.temperament && dog.temperament.includes(state.temperamentFilter)
+                );
+            }
+
+            // Aplica el filtro por origen
+            if (state.originFilter) {
+                filteredDogs = filteredDogs.filter(dog => {
+                    if (state.originFilter === 'all') return true;
+                    if (state.originFilter === 'created') return dog.created === true;
+                    if (state.originFilter === 'api') return dog.created === false;
+                    return false;
+                });
+            }
+
+            return {
+                ...state,
+                filteredDogs
+            };
+
         default:
             return state;
     }

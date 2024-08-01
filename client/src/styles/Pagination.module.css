@@ -1,4 +1,4 @@
-.pagination{
+.pagination {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,7 +9,7 @@
 
 .pagination_button {
     background-color: rgb(102, 55, 23);
-    font-family:'Courier New', Courier, monospace;
+    font-family: 'Courier New', Courier, monospace;
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -18,6 +18,28 @@
     cursor: pointer;
 }
 
+.pagination_button:disabled {
+    cursor: default;
+    background-color: rgb(56, 31, 7);
+}
+
 .pagination_button:hover {
     background-color: rgb(56, 31, 7);
+}
+
+.pageItem {
+    margin: 0 0.25rem; /* Menor margen para los botones de la página */
+}
+
+.active {
+    cursor: default;
+    font-weight: bold;
+    background-color: rgb(56, 31, 7); /* Color de fondo igual al de los botones */
+    color: white;
+    border-radius: 0.25rem;
+}
+
+.inactive {
+    background-color:rgb(102, 55, 23) ;
+    color:  white; /* Color del texto de la página desactivada */
 }

@@ -8,7 +8,7 @@ const getURL = `https://api.thedogapi.com/v1/breeds?api_key=${DB_API_KEY}`;
 
 const getAllDogs = async () => {
     try {
-        // Obtener datos de la base de datos
+        
         let dogDB = await Dog.findAll({
             include: {
                 model: Temperament,

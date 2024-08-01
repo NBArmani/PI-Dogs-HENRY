@@ -8,18 +8,31 @@ const SearchBar = () => {
     const [error, setError] = useState('');
 
     const handleSearch = async () => {
-        try {
-            await dispatch(getDogsByName(query));
-            setQuery(''); // Limpiar el campo de búsqueda después de la búsqueda exitosa
-            setError(''); // Limpiar cualquier error anterior
-        } catch (error) {
-            setError('No se encontraron perros con ese nombre.');
+        if (query.trim() === ''){
+            setError('') // -----> con esto nos aseguramos de que se limpie el error cuando el imput está vacío
+            return
+        }
+            const result = await dispatch(getDogsByName(query));
+        if (result.success) {
+            setQuery('');
+            setError('');
+        } else {
+            setError('¡Lo siento, no se encontraron perros con ese nombre!');
         }
     };
 
+
     const handleChange = (event) => {
-        setQuery(event.target.value);
+        const value = event.target.value;
+        setQuery(value);
+
+        //con esto nos aseguramos de que se limpie el error cuando el imput cambia
+        if(value.trim() === '') {
+            setError('')
+        }
+
     };
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -38,9 +51,11 @@ const SearchBar = () => {
                 />
                 <button type="submit" className={styles.button} >Buscar</button>
             </form>
-            {error && <p>{error}</p>}
+            {error && <p className={styles.searchbar_error}>{error}</p>}
         </div>
     );
 };
+
+
 
 export default SearchBar;

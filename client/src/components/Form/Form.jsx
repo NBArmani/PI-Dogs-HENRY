@@ -47,6 +47,8 @@ const Form = () => {
         } else {
             setFormData({ ...formData, [name]: value });
         }
+        const validateError = Validation({ ...formData, [name]: value })
+        setErrors(validateError)
     };
 
     const handleSubmit = (event) => {
