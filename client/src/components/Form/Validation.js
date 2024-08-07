@@ -1,9 +1,9 @@
-const Validation = (data) => {
-    let errors = {}
+const Validation = (data) => { 
+    let errors = {} 
 
     if (!data.name) {
         errors.name = 'El nombre del perro es obligatorio'
-    } else if (!/^[a-zA-Z\s]+$/.test(data.name)) {
+    } else if (!/^[a-zA-Z\s]+$/.test(data.name)) { 
         errors.name = 'El nombre no debe contener números ni caracteres especiales'
     }
 
@@ -11,6 +11,10 @@ const Validation = (data) => {
         errors.height = 'complete los campos asignados por favor'
     } else if (data.heightMin && data.heightMax && Number(data.heightMin) > Number(data.heightMax)) {
         errors.height = 'La altura mínima no puede ser mayor que la altura máxima'
+    } else if(data.heightMin < 30) {
+        errors.height = 'La altura mínima no puede ser menor que 30'
+    } else if(data.heightMax > 100) {
+        errors.height = 'No sabía que existían perros tan grandes'
     }
 
     if (!data.weightMin && !data.weightMax) {
@@ -27,7 +31,7 @@ const Validation = (data) => {
         errors.temperament = 'Elige al menos un temperamento, no seas así :(' 
     } 
 
-    return errors
+    return errors 
 }
 
 export default Validation

@@ -50,7 +50,6 @@ const Form = () => {
         const validateError = Validation({ ...formData, [name]: value })
         setErrors(validateError)
     };
-
     const handleSubmit = (event) => {
         event.preventDefault();
         const validateErrors = Validation(formData);

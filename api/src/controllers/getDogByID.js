@@ -5,10 +5,10 @@ const getDogById = async (id) => {
         const allDogies = await getAllDogs();
         let findDogByID;
 
-        if (id.includes('-')) {
-            findDogByID = allDogies.find((dog) => dog.id === id);
+        if (id.includes('-')) {                                                 
+            findDogByID = allDogies.find((dog) => dog.id === id);               
         } else {
-            findDogByID = allDogies.find((dog) => dog.id === parseInt(id, 10));
+            findDogByID = allDogies.find((dog) => dog.id === parseInt(id, 10)); 
         }
 
         if (!findDogByID) {

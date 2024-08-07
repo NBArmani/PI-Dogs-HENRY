@@ -10,6 +10,7 @@ import {
     ORDER_BY_WEIGHT,
     APPLY_FILTERS
 } from "./actions-type";
+
 const initialState = {
     dogs: [],
     filteredDogs: [],

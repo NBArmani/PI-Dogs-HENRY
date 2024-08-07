@@ -9,17 +9,17 @@ const getURL = `https://api.thedogapi.com/v1/breeds?api_key=${DB_API_KEY}`;
 const getAllDogs = async () => {
     try {
         
-        let dogDB = await Dog.findAll({
-            include: {
-                model: Temperament,
-                attributes: ['name'], 
+        let dogDB = await Dog.findAll({                                             
+            include: {                                                              
+                model: Temperament,                                                 
+                attributes: ['name'],
                 through: {
                     attributes: [] 
                 }
             }
         });
 
-             if (!dogDB || dogDB.length === 0) {
+             if (!dogDB || dogDB.length === 0) {                                    
             dogDB = [];
         }
 

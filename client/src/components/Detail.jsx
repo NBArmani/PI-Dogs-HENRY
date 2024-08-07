@@ -1,20 +1,21 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';  
 import { useDispatch, useSelector } from 'react-redux';
 import { getDetail } from '../redux/actions';
 import { Link } from 'react-router-dom';
-import styles from '../styles/Detail.module.css'; // Asegúrate de importar el archivo CSS correcto
+import styles from '../styles/Detail.module.css'; 
 
 const Detail = () => {
-    const { id } = useParams();
-    const dispatch = useDispatch();
-    const dog = useSelector(state => state.detail);
+    const { id } = useParams();                    
+    const dispatch = useDispatch();                 
+    const dog = useSelector(state => state.detail); 
 
-    useEffect(() => {
+    useEffect(() => {                               
         dispatch(getDetail(id));
     }, [dispatch, id]);
 
-    return !dog ? <div>Cargando...</div> : (
+   
+    return !dog ? <div>Cargando...</div> : (        
         <div className={styles.background}>
             <div className={styles.container}>
                 <div className={styles.leftSection}>

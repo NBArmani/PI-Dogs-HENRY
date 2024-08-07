@@ -10,24 +10,24 @@ const getTemperaments = async () => {
     try {
         const { data } = await axios.get(getURL)
 
-        const temperamentsFromApi = data.map(dog => dog.temperament).filter(Boolean) // esto te filtra temperamentos que no están vacíos, no son null ni undefined
+        const temperamentsFromApi = data.map(dog => dog.temperament).filter(Boolean)
 
-        let allTemperaments = temperamentsFromApi.toString().split(',') //lo convierte a string y los divide por comas
-        allTemperaments = allTemperaments.map(behavior => behavior.trim()).filter(behavior => behavior !== "") // te dan todos los temperamentos por separado y te saca los espacios vacíos del principio y el final de la cadena
+        let allTemperaments = temperamentsFromApi.toString().split(',') 
+        allTemperaments = allTemperaments.map(behavior => behavior.trim()).filter(behavior => behavior !== "") 
 
-        const tempsFiltrados = [...new Set(allTemperaments)]// con esto nos evitamos valores repetidos.
+        const tempsFiltrados = [...new Set(allTemperaments)]
 
         if (tempsFiltrados.length === 0) {
             throw new Error('NO SE ENCONTRARON TEMPERAMENTOS')
         }
 
-        const allTemps = tempsFiltrados.map(temp => {  //con esto pasamos los temperamentos a un objeto para luego guardarlo en la base de datos en base al modelo Temperament
+        const allTemps = tempsFiltrados.map(temp => { 
             return {
                 name: temp
             }
         })
 
-        await Temperament.bulkCreate(allTemps, {ignoreDuplicates: true}) // para evitar duplicados
+        await Temperament.bulkCreate(allTemps, {ignoreDuplicates: true}) 
 
         return allTemps
     } catch (error) {

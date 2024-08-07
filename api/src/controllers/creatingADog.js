@@ -1,4 +1,5 @@
 const { Dog, Temperament } = require('../db');
+const defaultImageUrl ='https://3fc4ed44-3fbc-419a-97a1-a29742511391.selcdn.net/coub_storage/coub/simple/cw_image/1d5d67e108a/24119f26e828d74bd0d97/1480094298_00064.jpg'
 
 const creatingADog = async (name, height, weight, life_span, image, temperaments) => {
     try {
@@ -12,26 +13,26 @@ const creatingADog = async (name, height, weight, life_span, image, temperaments
               
         const [dog, created] = await Dog.findOrCreate({
             where: { name },
-            defaults: { height, weight, life_span, image: image || 'https://3fc4ed44-3fbc-419a-97a1-a29742511391.selcdn.net/coub_storage/coub/simple/cw_image/1d5d67e108a/24119f26e828d74bd0d97/1480094298_00064.jpg', created: true }
+            defaults: { height, weight, life_span, image: image || defaultImageUrl , created: true }
         });
        
        
         if (created) {
-            const temperamentRecords = await Promise.all(
-                temperaments.map(async (temp) => {
-                    const [behaviorRecord] = await Temperament.findOrCreate({
+            const temperamentRecords = await Promise.all(                           
+                temperaments.map(async (temp) => {                                  
+                    const [behaviorRecord] = await Temperament.findOrCreate({       
                         where: { name: temp }
                     });
-                    return behaviorRecord;
+                    return behaviorRecord;                                          
                 })
             );
-            await dog.addTemperaments(temperamentRecords);
+            await dog.addTemperaments(temperamentRecords);                          
         }
 
-        const temperedDog = await Dog.findByPk(dog.id, {
+        const temperedDog = await Dog.findByPk(dog.id, {                            
             include: {
-                model: Temperament,
-                as: 'temperaments',
+                model: Temperament,                                                 
+                as: 'temperaments',                                                 
                 through: {
                     attributes: [] 
                 }
